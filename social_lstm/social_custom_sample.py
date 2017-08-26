@@ -77,7 +77,7 @@ def main():
     sample_args = parser.parse_args()
 
     # Define the path for the config file for saved args
-    with open(os.path.join('save', 'social_config.pkl'), 'rb') as f:
+    with open(os.path.join('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save', 'social_config.pkl'), 'rb') as f:
         saved_args = pickle.load(f)
 
     # Create a SocialModel object with the saved_args and infer set to true
@@ -88,7 +88,7 @@ def main():
     saver = tf.train.Saver()
 
     # Get the checkpoint state for the model
-    ckpt = tf.train.get_checkpoint_state('save')
+    ckpt = tf.train.get_checkpoint_state('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save')
     print ('loading model: ', ckpt.model_checkpoint_path)
 
     # Restore the model at the checkpoint
@@ -113,7 +113,8 @@ def main():
 
     total_error = get_mean_error(complete_traj, x_batch, sample_args.obs_length, saved_args.maxNumPeds)
 
-    print "Mean error of the model on this scenario is", total_error
+    print("Mean error of the model on this scenario is", total_error)
+
 
 if __name__ == '__main__':
     main()

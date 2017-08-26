@@ -79,18 +79,22 @@ def train(args):
 
     # Create the SocialDataLoader object
     data_loader = SocialDataLoader(args.batch_size, args.seq_length, args.maxNumPeds, datasets, forcePreProcess=True, infer=False)
-
+    print("leaveDataset:",args.leaveDataset)
     # Log directory
-    log_directory = 'log/'
-    log_directory += str(args.leaveDataset) + '/'
+    # log_directory = 'log/'
+    # log_directory += str(args.leaveDataset) + '/'
+
+    log_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/log/'
+    #log_directory += str(args.leaveDataset) + '/'
 
     # Logging files
     log_file_curve = open(os.path.join(log_directory, 'log_curve.txt'), 'w')
     log_file = open(os.path.join(log_directory, 'val.txt'), 'w')
 
     # Save directory
-    save_directory = 'save/'
-    save_directory += str(args.leaveDataset) + '/'
+    #save_directory = 'save/'
+    save_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save/'
+    #save_directory += str(args.leaveDataset) + '/'
 
     with open(os.path.join(save_directory, 'social_config.pkl'), 'wb') as f:
         pickle.dump(args, f)
@@ -108,7 +112,7 @@ def train(args):
         saver = tf.train.Saver(tf.all_variables(), max_to_keep=None)
 
         # summary_writer = tf.train.SummaryWriter('/tmp/lstm/logs', graph_def=sess.graph_def)
-        print 'Training begin'
+        print('Training begin')
         best_val_loss = 100
         best_epoch = 0
 
@@ -176,7 +180,7 @@ def train(args):
                 '''
             loss_epoch /= data_loader.num_batches
             log_file_curve.write(str(e)+','+str(loss_epoch)+',')
-            print '*****************'
+            print('*****************')
 
             # Validation
             data_loader.reset_batch_pointer(valid=True)
@@ -225,17 +229,17 @@ def train(args):
                 best_epoch = e
 
             print('(epoch {}), valid_loss = {:.3f}'.format(e, loss_epoch))
-            print 'Best epoch', best_epoch, 'Best validation loss', best_val_loss
+            print('Best epoch', best_epoch, 'Best validation loss', best_val_loss)
             log_file_curve.write(str(loss_epoch)+'\n')
-            print '*****************'
+            print( '*****************')
 
             # Save the model after each epoch
-            print 'Saving model'
+            print ('Saving model')
             checkpoint_path = os.path.join(save_directory, 'social_model.ckpt')
             saver.save(sess, checkpoint_path, global_step=e)
             print("model saved to {}".format(checkpoint_path))
 
-        print 'Best epoch', best_epoch, 'Best validation loss', best_val_loss
+        print('Best epoch', best_epoch, 'Best validation loss', best_val_loss)
         log_file.write(str(best_epoch)+','+str(best_val_loss))
 
         # CLose logging files

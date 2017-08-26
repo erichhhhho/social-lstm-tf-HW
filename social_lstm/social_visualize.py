@@ -27,7 +27,7 @@ def plot_trajectories(true_trajs, pred_trajs, obs_length, name):
     plt.figure()
 
     # Load the background
-    im = plt.imread('plot/background.png')
+    im = plt.imread('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/plot/background.png')
     implot = plt.imshow(im)
     width = im.shape[0]
     height = im.shape[1]
@@ -78,7 +78,7 @@ def plot_trajectories(true_trajs, pred_trajs, obs_length, name):
     # plt.ylim((0, 1))
     # plt.xlim((0, 1))
     # plt.show()
-    plt.savefig('plot/'+name+'.png')
+    plt.savefig('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/plot/'+name+'.png')
     plt.gcf().clear()
     plt.close()
 
@@ -87,11 +87,11 @@ def main():
     '''
     Main function
     '''
-    f = open('save/social_results.pkl', 'rb')
+    f = open('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save/social_results.pkl', 'rb')
     results = pickle.load(f)
 
     for i in range(len(results)):
-        print i
+        print(i)
         name = 'sequence' + str(i)
         plot_trajectories(results[i][0], results[i][1], results[i][2], name)
 

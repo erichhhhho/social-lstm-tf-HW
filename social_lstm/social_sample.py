@@ -4,7 +4,7 @@ import tensorflow as tf
 import os
 import pickle
 import argparse
-# import ipdb
+import ipdb
 
 from social_utils import SocialDataLoader
 from social_model import SocialModel
@@ -74,7 +74,7 @@ def main():
                         help='Dataset to be tested on')
 
     # Model to be loaded
-    parser.add_argument('--epoch', type=int, default=49,
+    parser.add_argument('--epoch', type=int, default=39,
                         help='Epoch of model to be loaded')
     
 
@@ -82,7 +82,7 @@ def main():
     sample_args = parser.parse_args()
 
     # Save directory
-    save_directory = 'save/' + str(args.test_dataset) + '/'
+    save_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save'
 
     # Define the path for the config file for saved args
     with open(os.path.join(save_directory, 'social_config.pkl'), 'rb') as f:
@@ -98,10 +98,10 @@ def main():
     # Get the checkpoint state for the model
     ckpt = tf.train.get_checkpoint_state(save_directory)
     # print ('loading model: ', ckpt.model_checkpoint_path)
-    print('loading model: ', ckpt.all_model_checkpoint_paths[args.epoch])
+    print('loading model: ', ckpt.model_checkpoint_path)
 
     # Restore the model at the checkpoint
-    saver.restore(sess, ckpt.all_model_checkpoint_paths[args.epoch])
+    saver.restore(sess, ckpt.model_checkpoint_path)
 
     # Dataset to get data from
     dataset = [sample_args.test_dataset]
@@ -135,23 +135,23 @@ def main():
         obs_grid = grid_batch[:sample_args.obs_length]
         # obs_traj is an array of shape obs_length x maxNumPeds x 3
 
-        print "********************** SAMPLING A NEW TRAJECTORY", b, "******************************"
+        print("********************** SAMPLING A NEW TRAJECTORY", b, "******************************")
         complete_traj = model.sample(sess, obs_traj, obs_grid, dimensions, x_batch, sample_args.pred_length)
 
         # ipdb.set_trace()
         # complete_traj is an array of shape (obs_length+pred_length) x maxNumPeds x 3
         total_error += get_mean_error(complete_traj, x[0], sample_args.obs_length, saved_args.maxNumPeds)
 
-        print "Processed trajectory number : ", b, "out of ", data_loader.num_batches, " trajectories"
+        print("Processed trajectory number : ", b, "out of ", data_loader.num_batches, " trajectories")
 
         # plot_trajectories(x[0], complete_traj, sample_args.obs_length)
         # return
         results.append((x[0], complete_traj, sample_args.obs_length))
 
     # Print the mean error across all the batches
-    print "Total mean error of the model is ", total_error/data_loader.num_batches
+    print("Total mean error of the model is ", total_error/data_loader.num_batches)
 
-    print "Saving results"
+    print("Saving results")
     with open(os.path.join(save_directory, 'social_results.pkl'), 'wb') as f:
         pickle.dump(results, f)
 
