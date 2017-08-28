@@ -22,24 +22,25 @@ def plot_trajectories(true_trajs, pred_trajs, obs_length, name):
     name: Name of the plot
     '''
     traj_length, maxNumPeds, _ = true_trajs.shape
-
+    #print(true_trajs.shape)
     # Initialize figure
     plt.figure()
 
     # Load the background
     im = plt.imread('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/plot/background.png')
-    implot = plt.imshow(im)
+    #implot = plt.imshow(im)
+
     width = im.shape[0]
     height = im.shape[1]
     # width = 1
     # height = 1
-
+    #print(width,height)
     traj_data = {}
     # For each frame/each point in all trajectories
     for i in range(traj_length):
         pred_pos = pred_trajs[i, :]
         true_pos = true_trajs[i, :]
-
+        #print(pred_pos,true_pos)
         # For each pedestrian
         for j in range(maxNumPeds):
             if true_pos[j, 0] == 0:
@@ -72,14 +73,19 @@ def plot_trajectories(true_trajs, pred_trajs, obs_length, name):
         pred_x = [p[0]*height for p in pred_traj_ped]
         pred_y = [p[1]*width for p in pred_traj_ped]
 
-        plt.plot(true_x, true_y, color=c, linestyle='solid', marker='o')
-        plt.plot(pred_x, pred_y, color=c, linestyle='dashed', marker='x')
+        #print(true_x,true_y)
+        plt.plot(true_x, true_y, 'c', linestyle='solid', marker='o')
+        plt.plot(pred_x, pred_y, 'c', linestyle='dashed', marker='x')
 
-    # plt.ylim((0, 1))
-    # plt.xlim((0, 1))
-    # plt.show()
-    plt.savefig('C:/Users/N1701420F/Desktop/SOCIAL_LSTM/plot/'+name+'.png')
+    #plt.ylim((0, 1))
+    #plt.xlim((0, 1))
+    #plt.show()
+    cPath='C:/Users/N1701420F/Desktop/SOCIAL_LSTM/result/'+name+'.png'
+    print(cPath)
+    plt.savefig(cPath)
+    #print(cPath)
     plt.gcf().clear()
+    #print(cPath)
     plt.close()
 
 
@@ -91,7 +97,10 @@ def main():
     results = pickle.load(f)
 
     for i in range(len(results)):
-        print(i)
+        #print(i)
+        #print(len(results))
+        #print(results[i][0])
+
         name = 'sequence' + str(i)
         plot_trajectories(results[i][0], results[i][1], results[i][2], name)
 
