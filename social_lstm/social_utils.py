@@ -153,13 +153,7 @@ class SocialDataLoader():
 
                     # Add their pedID, x, y to the row of the numpy array
                     pedsWithPos.append([ped, current_x, current_y])
-                # print('pedswithpos:')
-                # print(pedsWithPos)
-                # print('ind:')
-                # print(ind)
-                # print('Num of peds in this frame:')
-                # print(len(pedsList))
-                #print(np.array(pedsWithPos))
+            
                 if (ind >= valid_numFrames) or (self.infer):
                     # Add the details of all the peds in the current frame to all_frame_data
                     all_frame_data[dataset_index][ind - valid_numFrames, 0:len(pedsList), :] = np.array(pedsWithPos)
