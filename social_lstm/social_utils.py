@@ -29,7 +29,8 @@ class SocialDataLoader():
         # self.data_dirs = ['../data/eth/univ', '../data/eth/hotel',
         #                   '../data/ucy/zara/zara01', '../data/ucy/zara/zara02',
         #                   '../data/ucy/univ']
-
+        print('dataset:')
+        print(datasets)
         self.data_dirs = ['C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/eth/univ',
                           'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/eth/hotel',
                           'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/ucy/zara/zara01',
@@ -152,7 +153,13 @@ class SocialDataLoader():
 
                     # Add their pedID, x, y to the row of the numpy array
                     pedsWithPos.append([ped, current_x, current_y])
-
+                # print('pedswithpos:')
+                # print(pedsWithPos)
+                # print('ind:')
+                # print(ind)
+                # print('Num of peds in this frame:')
+                # print(len(pedsList))
+                #print(np.array(pedsWithPos))
                 if (ind >= valid_numFrames) or (self.infer):
                     # Add the details of all the peds in the current frame to all_frame_data
                     all_frame_data[dataset_index][ind - valid_numFrames, 0:len(pedsList), :] = np.array(pedsWithPos)
