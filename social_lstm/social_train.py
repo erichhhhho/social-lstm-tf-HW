@@ -4,6 +4,7 @@ import os
 import time
 import pickle
 import ipdb
+import psutil, os
 
 from social_model import SocialModel
 from social_utils import SocialDataLoader
@@ -62,7 +63,7 @@ def main():
     parser.add_argument('--maxNumPeds', type=int, default=60,
                         help='Maximum Number of Pedestrians')
     # The leave out dataset
-    parser.add_argument('--leaveDataset', type=int, default=0,
+    parser.add_argument('--leaveDataset', type=int, default=3,
                         help='The dataset index to be left out in training')
     # Lambda regularization parameter (L2)
     parser.add_argument('--lambda_param', type=float, default=0.0005,
@@ -72,8 +73,11 @@ def main():
 
 
 def train(args):
-    with tf.device('/gpu:0'):
 
+    p = psutil.Process(os.getpid())
+    p.nice(psutil.HIGH_PRIORITY_CLASS)
+
+    with tf.device('/gpu:0'):
         datasets = [x for x in range(5)]
         # Remove the leaveDataset from datasets
         datasets.remove(args.leaveDataset)
@@ -105,12 +109,12 @@ def train(args):
         model = SocialModel(args)
 
         config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
-        config.gpu_options.allow_growth=True
-        config.gpu_options.per_process_gpu_memory_fraction = 0.8
+        #config.gpu_options.allow_growth=True
+        #config.gpu_options.per_process_gpu_memory_fraction = 0.7
 
         # Initialize a TensorFlow session
         with tf.Session() as sess:
-            sess = tf.Session(config)
+            sess = tf.Session(config=config)
             # Initialize all variables in the graph
             sess.run(tf.initialize_all_variables())
             # Initialize a saver that saves all the variables in the graph

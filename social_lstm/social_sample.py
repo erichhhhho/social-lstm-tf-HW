@@ -70,7 +70,7 @@ def main():
     parser.add_argument('--pred_length', type=int, default=6,
                         help='Predicted length of the trajectory')
     # Test dataset
-    parser.add_argument('--test_dataset', type=int, default=3,
+    parser.add_argument('--test_dataset', type=int, default=0,
                         help='Dataset to be tested on')
 
     # Model to be loaded
@@ -82,12 +82,12 @@ def main():
     sample_args = parser.parse_args()
 
     # Save directory
-    save_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save'
+    save_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/ResultofLeaving0/save'
 
     # Define the path for the config file for saved args
     with open(os.path.join(save_directory, 'social_config.pkl'), 'rb') as f:
         saved_args = pickle.load(f)
-
+    #saved_args.maxNumPeds = 60;
     # Create a SocialModel object with the saved_args and infer set to true
     model = SocialModel(saved_args, True)
     # Initialize a TensorFlow session
@@ -98,10 +98,10 @@ def main():
     # Get the checkpoint state for the model
     ckpt = tf.train.get_checkpoint_state(save_directory)
     # print ('loading model: ', ckpt.model_checkpoint_path)
-    print('loading model: ', ckpt.model_checkpoint_path)
+    print('loading model: ', ckpt.all_model_checkpoint_paths[0])
 
     # Restore the model at the checkpoint
-    saver.restore(sess, ckpt.model_checkpoint_path)
+    saver.restore(sess, ckpt.all_model_checkpoint_paths[0])
 
     # Dataset to get data from
     dataset = [sample_args.test_dataset]
