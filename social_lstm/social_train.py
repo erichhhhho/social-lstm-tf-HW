@@ -241,7 +241,10 @@ def train(args):
                 # Save the model after each epoch
                 print ('Saving model')
                 checkpoint_path = os.path.join(save_directory, 'social_model.ckpt')
+
+
                 saver.save(sess, checkpoint_path, global_step=e)
+
                 print("model saved to {}".format(checkpoint_path))
 
             print('Best epoch', best_epoch, 'Best validation loss', best_val_loss)
