@@ -31,11 +31,11 @@ class SocialDataLoader():
         #                   '../data/ucy/univ']
         print('dataset:')
         print(datasets)
-        self.data_dirs = ['C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/eth/univ',
-                          'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/eth/hotel',
-                          'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/ucy/zara/zara01',
-                          'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/ucy/zara/zara02',
-                          'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data/ucy/univ']
+        self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ',
+                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel',
+                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/zara/zara01',
+                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/zara/zara02',
+                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/univ']
         # self.data_dirs = ['./data/eth/univ', './data/eth/hotel']
 
         self.used_data_dirs = [self.data_dirs[x] for x in datasets]
@@ -46,7 +46,7 @@ class SocialDataLoader():
 
         # Data directory where the pre-processed pickle file resides
         # self.data_dir = '../data'
-        self.data_dir = 'C:/Users/N1701420F/PycharmProjects/social-lstm-tf/data'
+        self.data_dir = '/home/hesl/PycharmProjects/social-lstm-tf-HW/data'
         # Maximum number of peds in a single frame (Number obtained by checking the datasets)
         self.maxNumPeds = maxNumPeds
 

@@ -72,7 +72,7 @@ def main():
 
 
 def train(args):
-    with tf.device('/gpu:0'):
+    with tf.device('/cpu:0'):
 
         datasets = [x for x in range(5)]
         # Remove the leaveDataset from datasets
@@ -86,7 +86,7 @@ def train(args):
         # log_directory = 'log/'
         # log_directory += str(args.leaveDataset) + '/'
 
-        log_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/log/'
+        log_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/log/'
         #log_directory += str(args.leaveDataset) + '/'
 
         # Logging files
@@ -95,7 +95,7 @@ def train(args):
 
         # Save directory
         #save_directory = 'save/'
-        save_directory = 'C:/Users/N1701420F/Desktop/SOCIAL_LSTM/save/'
+        save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/save/'
         #save_directory += str(args.leaveDataset) + '/'
 
         with open(os.path.join(save_directory, 'social_config.pkl'), 'wb') as f:
@@ -105,12 +105,12 @@ def train(args):
         model = SocialModel(args)
 
         config = tf.ConfigProto(allow_soft_placement=True, log_device_placement=True)
-        config.gpu_options.allow_growth=True
-        config.gpu_options.per_process_gpu_memory_fraction = 0.8
+        #config.gpu_options.allow_growth=True
+        #config.gpu_options.per_process_gpu_memory_fraction = 0.8
 
         # Initialize a TensorFlow session
         with tf.Session() as sess:
-            sess = tf.Session(config)
+            sess = tf.Session(config=config)
             # Initialize all variables in the graph
             sess.run(tf.initialize_all_variables())
             # Initialize a saver that saves all the variables in the graph
