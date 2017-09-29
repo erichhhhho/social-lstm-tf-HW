@@ -62,7 +62,7 @@ def main():
     parser.add_argument('--maxNumPeds', type=int, default=60,
                         help='Maximum Number of Pedestrians')
     # The leave out dataset
-    parser.add_argument('--leaveDataset', type=int, default=0,
+    parser.add_argument('--leaveDataset', type=int, default=1,
                         help='The dataset index to be left out in training')
     # Lambda regularization parameter (L2)
     parser.add_argument('--lambda_param', type=float, default=0.0005,
@@ -74,7 +74,7 @@ def main():
 def train(args):
     with tf.device('/cpu:0'):
 
-        datasets = [x for x in range(5)]
+        datasets = [x for x in range(2)]
         # Remove the leaveDataset from datasets
         datasets.remove(args.leaveDataset)
         #datasets = [0]
@@ -110,6 +110,9 @@ def train(args):
 
         # Initialize a TensorFlow session
         with tf.Session() as sess:
+
+            writer=tf.summary.FileWriter('./graphs',sess.graph)
+
             sess = tf.Session(config=config)
             # Initialize all variables in the graph
             sess.run(tf.initialize_all_variables())
@@ -161,7 +164,9 @@ def train(args):
                         # Feed the source, target data
                         feed = {model.input_data: x_batch, model.target_data: y_batch, model.grid_data: grid_batch}
 
-                        train_loss, _ = sess.run([model.cost, model.train_op], feed)
+                        train_loss, summary = sess.run([model.cost, model.train_op], feed)
+
+                        writer.add_summary(summary, e * data_loader.num_batches + batch)
 
                         loss_batch += train_loss
 
@@ -254,6 +259,7 @@ def train(args):
             log_file.close()
             log_file_curve.close()
 
+        writer.close()
 
 if __name__ == '__main__':
     main()

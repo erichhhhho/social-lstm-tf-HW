@@ -210,8 +210,11 @@ class SocialModel():
         # The train operator
         self.train_op = optimizer.apply_gradients(zip(grads, tvars))
 
+        tf.scalar_summary('Cost',self.cost)
+
+
         # Merge all summmaries
-        # merged_summary_op = tf.merge_all_summaries()
+        merged_summary_op = tf.merge_all_summaries()
 
     def define_embedding_and_output_layers(self, args):
         # Define variables for the spatial coordinates embedding layer
