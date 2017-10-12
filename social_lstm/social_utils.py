@@ -38,8 +38,20 @@ class SocialDataLoader():
         #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/univ']
         # self.data_dirs = ['./data/eth/univ', './data/eth/hotel']
 
-        self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ',
-                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel',
+        '''
+            Considering ETH dataset only
+        '''
+        # self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ',
+        #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel',
+        #                   ]
+        #
+
+        '''
+            Considering KITTI dataset only
+        '''
+
+        self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-13/gt',
+                          '/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-17/gt',
                           ]
 
         self.used_data_dirs = [self.data_dirs[x] for x in datasets]
@@ -107,7 +119,7 @@ class SocialDataLoader():
             # Define path of the csv file of the current dataset
             # file_path = os.path.join(directory, 'pixel_pos.csv')
             # file_path = os.path.join(directory, 'pixel_pos_interpolate.csv')
-            file_path = os.path.join(directory, 'pixel_pos_v.csv')
+            file_path = os.path.join(directory, 'pos.csv')
             # Load the data from the csv file
             data = np.genfromtxt(file_path, delimiter=',')
 

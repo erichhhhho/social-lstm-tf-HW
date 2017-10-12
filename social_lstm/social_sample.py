@@ -82,7 +82,11 @@ def main():
     sample_args = parser.parse_args()
 
     # Save directory
-    save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingVelocity1only/save'
+    '''Original Setting'''
+    # save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingVelocity1only/save'
+
+    '''KITTI Training Setting'''
+    save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/save'
 
     # Define the path for the config file for saved args
     with open(os.path.join(save_directory, 'social_config.pkl'), 'rb') as f:
@@ -124,10 +128,17 @@ def main():
         # Batch size is 1
         x_batch, y_batch, d_batch = x[0], y[0], d[0]
 
+        '''Original Setting'''
+        # if d_batch == 0 and dataset[0] == 0:
+        #     dimensions = [640, 480]
+        # else:
+        #     dimensions = [720, 576]
+
+        '''KITTI Training Setting'''
         if d_batch == 0 and dataset[0] == 0:
-            dimensions = [640, 480]
+            dimensions = [1242, 375]
         else:
-            dimensions = [720, 576]
+            dimensions = [1224, 370]
 
         grid_batch = getSequenceGridMask(x_batch, dimensions, saved_args.neighborhood_size, saved_args.grid_size)
 
