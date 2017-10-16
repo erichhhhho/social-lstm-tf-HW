@@ -67,30 +67,38 @@ data_loader = SocialDataLoader(1, sample_args.pred_length + sample_args.obs_leng
 #     #avatar.show()
 #     cv2.imshow("avatar", avatar)
 #     cv2.waitKey(0)
+print(results[0][1][0][2])
 
 #Each Frame
-for j in range(len(data_loader.data[0])):
+for k in range(int(len(data_loader.data[0])/(sample_args.obs_length+sample_args.pred_length))):
+    #Each
+    for j in range(sample_args.obs_length+sample_args.pred_length):
 
-    sourceFileName = "/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-17/img1/" + str(j + 1).zfill(6) + ".jpg"
+        sourceFileName = "/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-17/img1/" + str(j + 1+k*(sample_args.obs_length+sample_args.pred_length)).zfill(6) + ".jpg"
 
-    avatar= cv2.imread(sourceFileName)
-    #drawAvatar= ImageDraw.Draw(avatar)
-    #print(avatar.shape)
-    xSize  = avatar.shape[1]
-    ySize = avatar.shape[0]
-    #print(data_loader.data[0][0][0])
-    for i in range(20):
-         #GT
-         y=int(results[0][1][i][2]*ySize)
-         x=int(results[0][1][i][1]*xSize)
-         cv2.rectangle(avatar, (x  - 2, y  - 2), (x  + 2, y + 2), green,thickness=-1)
+        avatar= cv2.imread(sourceFileName)
 
-         yp=int(results[1][1][i][2]*ySize)
-         xp = int(results[1][1][i][1] * xSize)
-         cv2.rectangle(avatar, (x - 2, y - 2), (x + 2, y + 2), green, thickness=-1)
-    #drawAvatar.rectangle([(466, 139), (91 + 466, 139 + 193.68)])
-    #avatar.show()
-    cv2.imshow("avatar", avatar)
-    cv2.waitKey(0)
+        xSize  = avatar.shape[1]
+        ySize = avatar.shape[0]
+        print(sourceFileName)
+
+        for i in range(20):
+
+            #GT
+            x=int(results[k][0][j][i][2]*xSize)
+            y=int(results[k][0][j][i][1]*ySize)
+            cv2.rectangle(avatar, (x  - 2, y  - 2), (x  + 2, y + 2), green,thickness=-1)
+
+            #Predicted
+            xp = int(results[k][1][j][i][2] * xSize)
+            yp = int(results[k][1][j][i][1] * ySize)
+            cv2.rectangle(avatar, (xp - 2, yp - 2), (xp + 2, yp + 2), red, thickness=-1)
+
+        cv2.imshow("avatar", avatar)
+        cv2.waitKey(0)
+
+
+
+
 
 print(len(results))
