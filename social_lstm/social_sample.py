@@ -129,16 +129,19 @@ def main():
         x_batch, y_batch, d_batch = x[0], y[0], d[0]
 
         '''Original Setting'''
-        # if d_batch == 0 and dataset[0] == 0:
-        #     dimensions = [640, 480]
-        # else:
-        #     dimensions = [720, 576]
+        if d_batch == 0 and dataset[0] == 0:
+            dimensions = [640, 480]
+        else:
+            dimensions = [720, 576]
 
         '''KITTI Training Setting'''
-        if d_batch == 0 and dataset[0] == 0:
-            dimensions = [1242, 375]
-        else:
-            dimensions = [1224, 370]
+        # if d_batch == 0 and dataset[0] == 0:
+        #     dimensions = [1242, 375]
+        # else:
+        #     dimensions = [1224, 370]
+        #
+        # dimensions = [1224, 370]
+
 
         grid_batch = getSequenceGridMask(x_batch, dimensions, saved_args.neighborhood_size, saved_args.grid_size)
 

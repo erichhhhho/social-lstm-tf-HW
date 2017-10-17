@@ -25,11 +25,11 @@ def main():
                         help='rnn, gru, or lstm')
     # Size of each batch parameter
     '''Original code case:'''
-    # parser.add_argument('--batch_size', type=int, default=16,
-    #                     help='minibatch size')
-    '''KITTI training code case:'''
-    parser.add_argument('--batch_size', type=int, default=2,
+    parser.add_argument('--batch_size', type=int, default=16,
                         help='minibatch size')
+    # '''KITTI training code case:'''
+    # parser.add_argument('--batch_size', type=int, default=1,
+    #                     help='minibatch size')
     # Length of sequence to be considered parameter
     parser.add_argument('--seq_length', type=int, default=12,
                         help='RNN sequence length')
@@ -64,11 +64,11 @@ def main():
                         help='Grid size of the social grid')
     # Maximum number of pedestrians to be considered
     '''Original code case:'''
-    # parser.add_argument('--maxNumPeds', type=int, default=60,
-    #                     help='Maximum Number of Pedestrians')
-    '''KITTI training code case:'''
-    parser.add_argument('--maxNumPeds', type=int, default=20,
+    parser.add_argument('--maxNumPeds', type=int, default=70,
                         help='Maximum Number of Pedestrians')
+    # '''KITTI training code case:'''
+    # parser.add_argument('--maxNumPeds', type=int, default=20,
+    #                     help='Maximum Number of Pedestrians')
     # The leave out dataset
     parser.add_argument('--leaveDataset', type=int, default=0,
                         help='The dataset index to be left out in training')
@@ -82,7 +82,7 @@ def main():
 def train(args):
     with tf.device('/cpu:0'):
 
-        datasets = [x for x in range(2)]
+        datasets = [x for x in range(5)]
         # Remove the leaveDataset from datasets
         datasets.remove(args.leaveDataset)
         #datasets = [0]
@@ -119,7 +119,7 @@ def train(args):
         # Initialize a TensorFlow session
         with tf.Session() as sess:
 
-            writer=tf.summary.FileWriter('./graphs',sess.graph)
+            # writer=tf.summary.FileWriter('./graphs',sess.graph)
 
             sess = tf.Session(config=config)
             # Initialize all variables in the graph
@@ -164,19 +164,19 @@ def train(args):
 
 
                         '''Considering ETH/original only'''
-                        # if d_batch == 0 and datasets[0] == 0:
-                        #     dataset_data = [640, 480]
-                        # else:
-                        #     dataset_data = [720, 576]
+                        if d_batch == 0 and datasets[0] == 0:
+                            dataset_data = [640, 480]
+                        else:
+                            dataset_data = [720, 576]
 
 
                         '''Considering KITTI-13 and KITTI-17 only '''
-                        if d_batch == 0 and datasets[0] == 0:
-                            dataset_data = [1242, 375]
-                        else:
-                            dataset_data = [1224, 370]
+                        # if d_batch == 0 and datasets[0] == 0:
+                        #     dataset_data = [1242, 375]
+                        # else:
+                        #     dataset_data = [1224, 370]
 
-
+                        #dataset_data = [1224, 370]
                         grid_batch = getSequenceGridMask(x_batch, dataset_data, args.neighborhood_size, args.grid_size)
 
                         # Feed the source, target data
@@ -184,7 +184,7 @@ def train(args):
 
                         train_loss, summary = sess.run([model.cost, model.train_op], feed)
 
-                        writer.add_summary(summary, e * data_loader.num_batches + batch)
+                        #writer.add_summary(summary, e * data_loader.num_batches + batch)
 
                         loss_batch += train_loss
 
@@ -233,16 +233,18 @@ def train(args):
                         x_batch, y_batch, d_batch = x[batch], y[batch], d[batch]
 
                         '''Considering ETH/original only'''
-                        # if d_batch == 0 and datasets[0] == 0:
-                        #     dataset_data = [640, 480]
-                        # else:
-                        #     dataset_data = [720, 576]
+                        if d_batch == 0 and datasets[0] == 0:
+                            dataset_data = [640, 480]
+                        else:
+                            dataset_data = [720, 576]
 
                         '''Considering KITTI-13 and KITTI-17 only '''
-                        if d_batch == 0 and datasets[0] == 0:
-                            dataset_data = [1242, 375]
-                        else:
-                            dataset_data = [1224, 370]
+                        # if d_batch == 0 and datasets[0] == 0:
+                        #     dataset_data = [1242, 375]
+                        # else:
+                        #     dataset_data = [1224, 370]
+
+                        # dataset_data = [1224, 370]
 
                         grid_batch = getSequenceGridMask(x_batch, dataset_data, args.neighborhood_size, args.grid_size)
 
@@ -284,7 +286,7 @@ def train(args):
             log_file.close()
             log_file_curve.close()
 
-        writer.close()
+        #writer.close()
 
 if __name__ == '__main__':
     main()

@@ -33,12 +33,12 @@ sample_args = parser.parse_args()
 
 '''KITTI Training Setting'''
 
-save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/save'
+save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingKITTI-13NTestonKITTI-17/save'
 
 with open(os.path.join(save_directory, 'social_config.pkl'), 'rb') as f:
     saved_args = pickle.load(f)
 
-f = open('/home/hesl/PycharmProjects/social-lstm-tf-HW/save/social_results.pkl', 'rb')
+f = open('/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingKITTI-13NTestonKITTI-17/save/social_results.pkl', 'rb')
 results = pickle.load(f)
 
 dataset = [sample_args.visual_dataset]
@@ -96,7 +96,7 @@ for k in range(int(len(data_loader.data[0])/(sample_args.obs_length+sample_args.
 
         cv2.imshow("avatar", avatar)
         cv2.waitKey(0)
-
+        cv2.destroyAllWindows()
 
 
 
