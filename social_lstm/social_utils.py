@@ -127,6 +127,7 @@ class SocialDataLoader():
             file_path = os.path.join(directory, 'pixel_pos.csv')
             # file_path = os.path.join(directory, 'pixel_pos_interpolate.csv')
             #file_path = os.path.join(directory, 'pos.csv')
+            file_path=os.path.join(directory,'pixel_pos_frame_normalized_H.csv')
 
             # Load the data from the csv file
             data = np.genfromtxt(file_path, delimiter=',')
