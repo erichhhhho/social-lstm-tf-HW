@@ -31,20 +31,20 @@ class SocialDataLoader():
         #                   '../data/ucy/univ']
         print('dataset:')
         print(datasets)
-        self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ',
-                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel',
-                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/zara/zara01',
-                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/zara/zara02',
-                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/univ']
+        # self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ',
+        #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel',
+        #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/zara/zara01',
+        #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/zara/zara02',
+        #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/ucy/univ']
         # self.data_dirs = ['./data/eth/univ', './data/eth/hotel']
 
         '''
             Considering ETH dataset only
         '''
-        # self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ',
-        #                   '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel',
-        #                   ]
-        #
+        self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ/ETH_UNIV_OriginalFrameID',
+                          '/home/hesl//PycharmProjects/social-lstm-tf-HW/data/eth/hotel/ETH_HOTEL_OriginalFrameID',
+                          ]
+
 
         '''
             Considering KITTI dataset only
@@ -124,10 +124,10 @@ class SocialDataLoader():
         for directory in data_dirs:
 
             # Define path of the csv file of the current dataset
-            file_path = os.path.join(directory, 'pixel_pos.csv')
+            #file_path = os.path.join(directory, 'pixel_pos.csv')
             # file_path = os.path.join(directory, 'pixel_pos_interpolate.csv')
             #file_path = os.path.join(directory, 'pos.csv')
-            file_path=os.path.join(directory,'pixel_pos_frame_normalized_H.csv')
+            file_path=os.path.join(directory,'pixel_pos_o.csv')
 
             # Load the data from the csv file
             data = np.genfromtxt(file_path, delimiter=',')

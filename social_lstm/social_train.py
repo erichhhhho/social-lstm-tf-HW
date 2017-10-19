@@ -82,7 +82,7 @@ def main():
 def train(args):
     with tf.device('/cpu:0'):
 
-        datasets = [x for x in range(5)]
+        datasets = [x for x in range(2)]
         # Remove the leaveDataset from datasets
         datasets.remove(args.leaveDataset)
         #datasets = [0]
