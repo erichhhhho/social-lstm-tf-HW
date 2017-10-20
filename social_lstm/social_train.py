@@ -31,6 +31,10 @@ def main():
     # parser.add_argument('--batch_size', type=int, default=1,
     #                     help='minibatch size')
     # Length of sequence to be considered parameter
+    '''Observed 8 and Predicted 12 case:'''
+    # parser.add_argument('--seq_length', type=int, default=20,
+    #                     help='RNN sequence length')
+    '''Original case:'''
     parser.add_argument('--seq_length', type=int, default=12,
                         help='RNN sequence length')
     # Number of epochs parameter

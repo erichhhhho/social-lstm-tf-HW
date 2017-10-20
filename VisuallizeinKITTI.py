@@ -21,7 +21,7 @@ parser.add_argument('--obs_length', type=int, default=8,
 parser.add_argument('--pred_length', type=int, default=12,
                     help='Predicted length of the trajectory')
 # Test dataset
-parser.add_argument('--visual_dataset', type=int, default=1,
+parser.add_argument('--visual_dataset', type=int, default=0,
                     help='Dataset to be tested on')
 
 # Model to be loaded
@@ -34,19 +34,22 @@ sample_args = parser.parse_args()
 '''KITTI Training Setting'''
 
 #save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingKITTI-13NTestonKITTI-17/save'
-save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/save'
+#save_directory = '/home/hesl/PycharmProjects/social-lstm-tf-HW/save'
+
+save_directory ='/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingETH1TestETH0/save/'
 
 with open(os.path.join(save_directory, 'social_config.pkl'), 'rb') as f:
     saved_args = pickle.load(f)
 
 #f = open('/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingKITTI-13NTestonKITTI-17/save/social_results.pkl', 'rb')
-f = open('/home/hesl/PycharmProjects/social-lstm-tf-HW/save/social_results.pkl', 'rb')
+f = open('/home/hesl/PycharmProjects/social-lstm-tf-HW/ResultofTrainingETH1TestETH0/save/social_results.pkl', 'rb')
+#f = open('/home/hesl/PycharmProjects/social-lstm-tf-HW/save/social_results.pkl', 'rb')
 results = pickle.load(f)
 
 dataset = [sample_args.visual_dataset]
 data_loader = SocialDataLoader(1, sample_args.pred_length + sample_args.obs_length, saved_args.maxNumPeds, dataset, True, infer=True)
 
-eth_H=np.loadtxt('/media/hesl/OS/Documents and Settings/N1701420F/Desktop/dataset/ETH/ewap_dataset/seq_eth/H.txt')
+eth_H=np.loadtxt('/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ/H.txt')
 
 
 
@@ -85,90 +88,124 @@ eth_H=np.loadtxt('/media/hesl/OS/Documents and Settings/N1701420F/Desktop/datase
 
 print(results[0][1][0][2])
 
+
+
+#Visualize result of image coordinate data
 #Each Frame
 for k in range(int(len(data_loader.frameList[0])/(sample_args.obs_length+sample_args.pred_length))):
     #Each
     for j in range(sample_args.obs_length+sample_args.pred_length):
 
-        sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/frame-"  + str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3) + ".jpg"
+        sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/eth/frame-" + str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3) + ".jpeg"
+        print(sourceFileName)
 
         avatar= cv2.imread(sourceFileName)
 
+
+        #width
         xSize  = avatar.shape[1]
+        #height
         ySize = avatar.shape[0]
-        print(sourceFileName)
+
 
         for i in range(data_loader.maxNumPeds):
             if results[k][1][j][i][0] != 0:
                 # Predicted
-                yp = int(results[k][1][j][i][2] * ySize)
-                xp = int(results[k][1][j][i][1] * xSize)
+                yp = int(np.round(results[k][1][j][i][2] * ySize))
+                xp = int(np.round(results[k][1][j][i][1] * xSize))
                 cv2.rectangle(avatar, (xp - 2, yp - 2), (xp + 2, yp + 2), red, thickness=-1)
 
             if results[k][0][j][i][0]!=0:
                 # GT
-                y = int(results[k][0][j][i][2] * ySize)
-                x = int(results[k][0][j][i][1] * xSize)
+                y = int(np.round(results[k][0][j][i][2] * ySize))
+                x = int(np.round(results[k][0][j][i][1] * xSize))
                 cv2.rectangle(avatar, (x - 2, y - 2), (x + 2, y + 2), green, thickness=-1)
 
+                print('x,y')
+                print(x,y)
             if results[k][1][j][i][0] != 0 and results[k][0][j][i][0]!=0 and results[k][0][j][i][0]==results[k][1][j][i][0]:
                 cv2.line(avatar, (x, y), (xp, yp), (255,0,0),1)
 
         cv2.imshow("avatar", avatar)
-        imagename='/home/hesl/PycharmProjects/social-lstm-tf-HW/plot/visualize-'+str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3)+'.png'
-        cv2.imwrite(imagename, avatar)
-        #cv2.waitKey(0)
+        #imagename='/home/hesl/PycharmProjects/social-lstm-tf-HW/plot/visualize-'+str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3)+'.png'
+        #cv2.imwrite(imagename, avatar)
+        cv2.waitKey(0)
 
 #Visualize result of world coordinate data
 #Each Frame
-for k in range(int(len(data_loader.frameList[0])/(sample_args.obs_length+sample_args.pred_length))):
-    #Each
-    for j in range(sample_args.obs_length+sample_args.pred_length):
-
-        sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/frame-"  + str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3) + ".jpg"
-
-        avatar= cv2.imread(sourceFileName)
-
-        xSize  = avatar.shape[1]
-        ySize = avatar.shape[0]
-        print(sourceFileName)
-
-        for i in range(data_loader.maxNumPeds):
-
-
-            if results[k][1][j][i][0] != 0:
-                pos =np.ones(3)
-
-                # Predicted
-                yp = int(results[k][1][j][i][2])
-                xp = int(results[k][1][j][i][1])
-
-                #pos:[x,y,1]
-                pos[0] = xp
-                pos[1] = yp
-
-                pos/eth_H.transpose()
-
-
-                cv2.rectangle(avatar, (xp - 2, yp - 2), (xp + 2, yp + 2), red, thickness=-1)
-
-
-
-
-
-            if results[k][0][j][i][0]!=0:
-                # GT
-                y = int(results[k][0][j][i][2] * ySize)
-                x = int(results[k][0][j][i][1] * xSize)
-                cv2.rectangle(avatar, (x - 2, y - 2), (x + 2, y + 2), green, thickness=-1)
-
-            if results[k][1][j][i][0] != 0 and results[k][0][j][i][0]!=0 and results[k][0][j][i][0]==results[k][1][j][i][0]:
-                cv2.line(avatar, (x, y ), (xp, yp), (255,0,0),1)
-
-        cv2.imshow("avatar", avatar)
-        imagename='/home/hesl/PycharmProjects/social-lstm-tf-HW/plot/visualize-'+str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3)+'.png'
-        cv2.imwrite(imagename, avatar)
-        #cv2.waitKey(0)
+# for k in range(int(len(data_loader.frameList[0])/(sample_args.obs_length+sample_args.pred_length))):
+#     #Each
+#     for j in range(sample_args.obs_length+sample_args.pred_length):
+#
+#         sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/eth/frame-" + str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3) + ".jpeg"
+#
+#         avatar= cv2.imread(sourceFileName)
+#
+#         xSize  = avatar.shape[1]
+#         ySize = avatar.shape[0]
+#         print(sourceFileName)
+#
+#         for i in range(data_loader.maxNumPeds):
+#
+#
+#             if results[k][1][j][i][0] != 0:
+#                 pos =np.ones(3)
+#
+#                 # Predicted
+#                 xp = results[k][1][j][i][2]
+#                 yp = results[k][1][j][i][1]
+#
+#                 #pos:[x,y,1]
+#                 pos[0] = xp
+#                 pos[1] = yp
+#
+#                 pos=np.dot(pos,np.linalg.inv(eth_H.transpose()))
+#
+#                 xp=int(np.around(pos[0]/pos[2]))
+#                 yp=int(np.around(pos[1]/pos[2]))
+#
+#                 temp = yp
+#                 yp= xp
+#                 xp = temp
+#
+#                 cv2.rectangle(avatar, (xp - 2, yp - 2), (xp + 2, yp + 2), red, thickness=-1)
+#
+#
+#             if results[k][0][j][i][0]!=0:
+#                 # GT
+#                 posp = np.ones(3)
+#
+#                 x= results[k][0][j][i][2]
+#                 y = results[k][0][j][i][1]
+#
+#
+#
+#                 posp[0]=x
+#                 posp[1]=y
+#
+#                 posp = np.dot(posp,np.linalg.inv(eth_H.transpose()))
+#
+#                 x = int(np.around(posp[0] / posp[2]))
+#                 y = int(np.around(posp[1] / posp[2]))
+#
+#                 print(posp[0] / posp[2],posp[1] / posp[2])
+#
+#                 print('xy:')
+#                 print(x, y)
+#
+#                 temp=y
+#                 y=x
+#                 x=temp
+#
+#                 cv2.rectangle(avatar, (x - 2, y - 2), (x + 2, y + 2), green, thickness=-1)
+#
+#             if results[k][1][j][i][0] != 0 and results[k][0][j][i][0]!=0 and results[k][0][j][i][0]==results[k][1][j][i][0]:
+#                 cv2.line(avatar, (x, y), (xp, yp), (255,0,0),1)
+#
+#         cv2.imshow("avatar", avatar)
+#         #imagename='/home/hesl/PycharmProjects/social-lstm-tf-HW/plot/visualize-'+str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3)+'.png'
+#         #cv2.imwrite(imagename, avatar)
+#         cv2.waitKey(0)
 
 
 print(len(results))
