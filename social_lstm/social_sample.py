@@ -64,13 +64,13 @@ def main():
 
     parser = argparse.ArgumentParser()
     # Observed length of the trajectory parameter
-    parser.add_argument('--obs_length', type=int, default=8,
+    parser.add_argument('--obs_length', type=int, default=6,
                         help='Observed length of the trajectory')
     # Predicted length of the trajectory parameter
-    parser.add_argument('--pred_length', type=int, default=12,
+    parser.add_argument('--pred_length', type=int, default=6,
                         help='Predicted length of the trajectory')
     # Test dataset
-    parser.add_argument('--test_dataset', type=int, default=0,
+    parser.add_argument('--test_dataset', type=int, default=1,
                         help='Dataset to be tested on')
 
     # Model to be loaded
@@ -133,6 +133,11 @@ def main():
             dimensions = [640, 480]
         else:
             dimensions = [720, 576]
+
+        '''eth/eth grid'''
+        dimensions = [14, 16]
+        '''eth/hotel grid'''
+        dimensions = [7, 16]
 
         '''KITTI Training Setting'''
         # if d_batch == 0 and dataset[0] == 0:

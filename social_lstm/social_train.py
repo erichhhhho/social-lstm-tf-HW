@@ -44,6 +44,7 @@ def main():
     parser.add_argument('--save_every', type=int, default=400,
                         help='save frequency')
     # TODO: (resolve) Clipping gradients for now. No idea whether we should
+
     # Gradient value at which it should be clipped
     parser.add_argument('--grad_clip', type=float, default=10.,
                         help='clip gradients at this value')
@@ -74,7 +75,7 @@ def main():
     # parser.add_argument('--maxNumPeds', type=int, default=20,
     #                     help='Maximum Number of Pedestrians')
     # The leave out dataset
-    parser.add_argument('--leaveDataset', type=int, default=0,
+    parser.add_argument('--leaveDataset', type=int, default=1,
                         help='The dataset index to be left out in training')
     # Lambda regularization parameter (L2)
     parser.add_argument('--lambda_param', type=float, default=0.0005,
@@ -173,6 +174,11 @@ def train(args):
                         else:
                             dataset_data = [720, 576]
 
+                        '''eth/eth grid'''
+                        dataset_data = [14, 16]
+
+                        '''eth/hotel grid'''
+                        dataset_data = [7, 16]
 
                         '''Considering KITTI-13 and KITTI-17 only '''
                         # if d_batch == 0 and datasets[0] == 0:
@@ -241,6 +247,13 @@ def train(args):
                             dataset_data = [640, 480]
                         else:
                             dataset_data = [720, 576]
+
+                        '''eth/eth grid'''
+                        dataset_data = [14, 16]
+
+                        '''eth/univ grid'''
+                        dataset_data= [7, 16]
+
 
                         '''Considering KITTI-13 and KITTI-17 only '''
                         # if d_batch == 0 and datasets[0] == 0:
