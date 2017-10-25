@@ -2,18 +2,14 @@
 
 import pickle
 import argparse
-
 import os
 from social_utils import SocialDataLoader
-
 import numpy as np
-
 import cv2
 from PIL import Image, ImageDraw
 
 green = (0,255,0)
 red = (0,0,255)
-
 
 parser = argparse.ArgumentParser()
 # Observed length of the trajectory parameter
