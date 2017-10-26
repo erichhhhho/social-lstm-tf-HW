@@ -83,10 +83,7 @@ hotel_H=np.loadtxt('/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/hotel/
 #     cv2.imshow("avatar", avatar)
 #     cv2.waitKey(0)
 
-
 print(results[0][1][0][2])
-
-
 
 #Visualize result of image coordinate data
 #Each Frame
