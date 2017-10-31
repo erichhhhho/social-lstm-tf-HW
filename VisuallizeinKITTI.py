@@ -196,5 +196,4 @@ for k in range(int(len(data_loader.frameList[0])/(sample_args.obs_length+sample_
         cv2.imwrite(imagename, avatar)
         #cv2.waitKey(0)
 
-
 print(len(results))
