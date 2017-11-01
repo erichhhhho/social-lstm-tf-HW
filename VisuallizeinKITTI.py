@@ -18,7 +18,7 @@ parser.add_argument('--obs_length', type=int, default=6,
 # Predicted length of the trajectory parameter
 parser.add_argument('--pred_length', type=int, default=6,
                     help='Predicted length of the trajectory')
-# Test dataset
+# Visualized dataset
 parser.add_argument('--visual_dataset', type=int, default=1,
                     help='Dataset to be tested on')
 
@@ -28,6 +28,25 @@ parser.add_argument('--epoch', type=int, default=39,
 
 # Parse the parameters
 sample_args = parser.parse_args()
+
+
+
+videopath=['/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/eth/',
+                '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/',
+                '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/ucy/zara01/',
+                '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/ucy/zara02/',
+                '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/ucy/univ/']
+
+H_path=['/media/hesl/OS/Documents and Settings/N1701420F/Desktop/pedestrians/ewap_dataset/seq_eth/H.txt',
+        '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/pedestrians/ewap_dataset/seq_hotel/H.txt',
+        '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/pedestrians/ucy_crowd/data_zara01/H.txt',
+        '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/pedestrians/ucy_crowd/data_zara02/H.txt',
+        '/media/hesl/OS/Documents and Settings/N1701420F/Desktop/pedestrians/ucy_crowd/data_students03/H.txt']
+
+H=np.loadtxt(H_path[sample_args.visual_dataset])
+
+
+
 
 '''KITTI Training Setting'''
 
@@ -47,18 +66,26 @@ results = pickle.load(f)
 dataset = [sample_args.visual_dataset]
 data_loader = SocialDataLoader(1, sample_args.pred_length + sample_args.obs_length, saved_args.maxNumPeds, dataset, True, infer=True)
 
-eth_H=np.loadtxt('/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/univ/H.txt')
-hotel_H=np.loadtxt('/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/hotel/H.txt')
 
 #[7,16]
 #print(data_loader.data[0][0].shape)
-
-# '''Visualize Ground Truth'''
+#
+# '''Visualize Ground Truth (u,v)'''
 # for j in range(len(data_loader.frameList[0])):
 #
-#     # sourceFileName = "/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-17/img1/" + str(j + 1).zfill(6) + ".jpg"
+#     #sourceFileName = "/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-17/img1/" + str(j + 1).zfill(6) + ".jpg"
+#     #Visualize ETH/hotel
+#     #sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/frame-" + str(int(data_loader.frameList[0][j])).zfill(3) + ".jpg"
+#     #Eth/eth
+#     #sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/eth/frame-" + str(int(data_loader.frameList[0][j])).zfill(3)+ ".jpeg"
+#     #UCY/univ
+#     #sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/ucy/univ/frame-" + str(int(data_loader.frameList[0][j])+1).zfill(3) + ".jpg"
+#     # UCY/zara01
+#     sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/ucy/zara01/frame-" + str(int(data_loader.frameList[0][j])+1).zfill(3) + ".jpg"
 #
-#     sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/frame-" + str(int(data_loader.frameList[0][j])).zfill(3) + ".jpg"
+#     # UCY/zara02
+#     #sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/ucy/zara02/frame-" + str(int(data_loader.frameList[0][j])).zfill(3) + ".jpg"
+#
 #     print(sourceFileName)
 #
 #     avatar= cv2.imread(sourceFileName)
@@ -82,6 +109,51 @@ hotel_H=np.loadtxt('/home/hesl/PycharmProjects/social-lstm-tf-HW/data/eth/hotel/
 #     #avatar.show()
 #     cv2.imshow("avatar", avatar)
 #     cv2.waitKey(0)
+
+
+'''Visualize Ground Truth (x,y)'''
+for j in range(len(data_loader.frameList[0])):
+    #UCY plus1 in frame
+    #ETH no need
+    sourceFileName = videopath[sample_args.visual_dataset] + "frame-" + str(int(data_loader.frameList[0][j])).zfill(3) + ".jpg"
+
+    print(sourceFileName)
+
+    avatar= cv2.imread(sourceFileName)
+
+    xSize  = avatar.shape[1]
+    ySize = avatar.shape[0]
+
+    for i in range(data_loader.maxNumPeds):
+
+        pos = np.ones(3)
+        y=data_loader.data[0][j][i][2]
+        x=data_loader.data[0][j][i][1]
+
+        pos[0] = x
+        pos[1] = y
+
+        pos = np.dot(pos, np.linalg.inv(H.transpose()))
+
+        #print(pos[0] ,pos[1] )
+        if sample_args.visual_dataset==1 or sample_args.visual_dataset==0:
+            v = int(np.around(pos[0] / pos[2]))
+            u = int(np.around(pos[1] / pos[2]))
+        else:
+            u = int(np.around(pos[0] / pos[2]))
+            v = int(np.around(pos[1] / pos[2]))
+
+
+        if data_loader.data[0][j][i][0]!=0:
+            #print(u, v)
+            cv2.rectangle(avatar, (u - 2, v - 2), (u + 2, v + 2), green, thickness=-1)
+
+
+    cv2.imshow("avatar", avatar)
+    imagename='/media/hesl/OS/Documents and Settings/N1701420F/Desktop/dataset/InterpolationVisualization/'+str(sample_args.visual_dataset)+'/visualize-'+ str(int(data_loader.frameList[0][j])+1).zfill(3) + ".jpg"
+    #cv2.imwrite(imagename, avatar)
+    cv2.waitKey(0)
+
 
 print(results[0][1][0][2])
 
@@ -128,73 +200,73 @@ print(results[0][1][0][2])
 
 #Visualize result of world coordinate data
 #Each Frame
-for k in range(int(len(data_loader.frameList[0])/(sample_args.obs_length+sample_args.pred_length))):
-    #Each
-    for j in range(sample_args.obs_length+sample_args.pred_length):
-
-        sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/frame-" + str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3) + ".jpg"
-
-        avatar= cv2.imread(sourceFileName)
-
-        xSize  = avatar.shape[1]
-        ySize = avatar.shape[0]
-        print(sourceFileName)
-
-        for i in range(data_loader.maxNumPeds):
-
-
-            if results[k][1][j][i][0] != 0:
-                pos =np.ones(3)
-
-                # Predicted
-                xp = results[k][1][j][i][1]
-                yp = results[k][1][j][i][2]
-
-                #pos:[x,y,1]
-                pos[0] = xp
-                pos[1] = yp
-
-                # pos = np.dot(posp,np.linalg.inv(eth_H.transpose()))
-                pos = np.dot(pos, np.linalg.inv(hotel_H.transpose()))
-
-                vp=int(np.around(pos[0]/pos[2]))
-                up=int(np.around(pos[1]/pos[2]))
-
-                cv2.rectangle(avatar, (up - 2, vp - 2), (up + 2, vp + 2), red, thickness=-1)
-
-
-            if results[k][0][j][i][0]!=0:
-                # GT
-                posp = np.ones(3)
-
-                x= results[k][0][j][i][1]
-                y = results[k][0][j][i][2]
-
-
-
-                posp[0]=x
-                posp[1]=y
-
-                #posp = np.dot(posp,np.linalg.inv(eth_H.transpose()))
-                posp = np.dot(posp, np.linalg.inv(hotel_H.transpose()))
-
-                v = int(np.around(posp[0] / posp[2]))
-                u = int(np.around(posp[1] / posp[2]))
-
-                print(posp[0] / posp[2],posp[1] / posp[2])
-
-                print('uv:')
-                print(u, v)
-
-                cv2.rectangle(avatar, (u - 2, v - 2), (u + 2, v + 2), green, thickness=-1)
-
-            if results[k][1][j][i][0] != 0 and results[k][0][j][i][0]!=0 and results[k][0][j][i][0]==results[k][1][j][i][0]:
-                cv2.line(avatar, (u, v), (up, vp), (255,0,0),1)
-
-        cv2.imshow("avatar", avatar)
-        imagename='/home/hesl/PycharmProjects/social-lstm-tf-HW/plot/visualize-'+str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3)+'.png'
-        cv2.imwrite(imagename, avatar)
-        #cv2.waitKey(0)
+# for k in range(int(len(data_loader.frameList[0])/(sample_args.obs_length+sample_args.pred_length))):
+#     #Each
+#     for j in range(sample_args.obs_length+sample_args.pred_length):
+#
+#         sourceFileName = "/media/hesl/OS/Documents and Settings/N1701420F/Desktop/video/eth/hotel/frame-" + str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3) + ".jpg"
+#
+#         avatar= cv2.imread(sourceFileName)
+#
+#         xSize  = avatar.shape[1]
+#         ySize = avatar.shape[0]
+#         print(sourceFileName)
+#
+#         for i in range(data_loader.maxNumPeds):
+#
+#
+#             if results[k][1][j][i][0] != 0:
+#                 pos =np.ones(3)
+#
+#                 # Predicted
+#                 xp = results[k][1][j][i][1]
+#                 yp = results[k][1][j][i][2]
+#
+#                 #pos:[x,y,1]
+#                 pos[0] = xp
+#                 pos[1] = yp
+#
+#                 # pos = np.dot(posp,np.linalg.inv(eth_H.transpose()))
+#                 pos = np.dot(pos, np.linalg.inv(hotel_H.transpose()))
+#
+#                 vp=int(np.around(pos[0]/pos[2]))
+#                 up=int(np.around(pos[1]/pos[2]))
+#
+#                 cv2.rectangle(avatar, (up - 2, vp - 2), (up + 2, vp + 2), red, thickness=-1)
+#
+#
+#             if results[k][0][j][i][0]!=0:
+#                 # GT
+#                 posp = np.ones(3)
+#
+#                 x= results[k][0][j][i][1]
+#                 y = results[k][0][j][i][2]
+#
+#
+#
+#                 posp[0]=x
+#                 posp[1]=y
+#
+#                 #posp = np.dot(posp,np.linalg.inv(eth_H.transpose()))
+#                 posp = np.dot(posp, np.linalg.inv(hotel_H.transpose()))
+#
+#                 v = int(np.around(posp[0] / posp[2]))
+#                 u = int(np.around(posp[1] / posp[2]))
+#
+#                 print(posp[0] / posp[2],posp[1] / posp[2])
+#
+#                 print('uv:')
+#                 print(u, v)
+#
+#                 cv2.rectangle(avatar, (u - 2, v - 2), (u + 2, v + 2), green, thickness=-1)
+#
+#             if results[k][1][j][i][0] != 0 and results[k][0][j][i][0]!=0 and results[k][0][j][i][0]==results[k][1][j][i][0]:
+#                 cv2.line(avatar, (u, v), (up, vp), (255,0,0),1)
+#
+#         cv2.imshow("avatar", avatar)
+#         imagename='/home/hesl/PycharmProjects/social-lstm-tf-HW/plot/visualize-'+str(int(data_loader.frameList[0][j+k*(sample_args.obs_length+sample_args.pred_length)])).zfill(3)+'.png'
+#         cv2.imwrite(imagename, avatar)
+#         #cv2.waitKey(0)
 
 
 print(len(results))

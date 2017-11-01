@@ -61,6 +61,12 @@ class SocialDataLoader():
         #                   '/home/hesl/PycharmProjects/social-lstm-tf-HW/data/KITTI-17/Last45',
         #                   ]
 
+        self.data_dirs = ['/home/hesl/PycharmProjects/social-lstm-pytorch/data/eth/univ/HEWEI',
+                          '/home/hesl/PycharmProjects/social-lstm-pytorch/data/eth/hotel/HEWEI',
+                          '/home/hesl/PycharmProjects/social-lstm-pytorch/data/ucy/zara/zara01/HEWEI',
+                          '/home/hesl/PycharmProjects/social-lstm-pytorch/data/ucy/zara/zara02/HEWEI',
+                          '/home/hesl/PycharmProjects/social-lstm-pytorch/data/ucy/univ/HEWEI']
+
         self.used_data_dirs = [self.data_dirs[x] for x in datasets]
         self.infer = infer
 
@@ -127,7 +133,7 @@ class SocialDataLoader():
             #file_path = os.path.join(directory, 'pixel_pos.csv')
             # file_path = os.path.join(directory, 'pixel_pos_interpolate.csv')
             #file_path = os.path.join(directory, 'pos.csv')
-            file_path=os.path.join(directory,'pixel_pos_o.csv')
+            file_path=os.path.join(directory,'world_coordinate_inter.csv')
 
             # Load the data from the csv file
             data = np.genfromtxt(file_path, delimiter=',')

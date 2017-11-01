@@ -163,7 +163,7 @@ def main():
 
         print("Processed trajectory number : ", b, "out of ", data_loader.num_batches, " trajectories")
 
-        # plot_trajectories(x[0], complete_traj, sample_args.obs_length)
+        # plot_trajectories(x[0], complete_traj, sample_args.obs_lengthre)
         # return
         results.append((x[0], complete_traj, sample_args.obs_length))
 
