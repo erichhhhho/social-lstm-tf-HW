@@ -268,5 +268,4 @@ print(results[0][1][0][2])
 #         cv2.imwrite(imagename, avatar)
 #         #cv2.waitKey(0)
 
-
 print(len(results))
